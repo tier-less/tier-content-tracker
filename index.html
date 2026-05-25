@@ -269,9 +269,46 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:poi
 .idea-title{font-size:14px;font-weight:700;margin-bottom:4px;}
 .idea-desc{font-size:13px;color:var(--muted);line-height:1.6;}
 .idea-status{border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;margin-top:7px;display:inline-block;}
-.idea-status.dev{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,53,0.2);}
+.idea-status.review{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(77,166,255,0.2);}
 .idea-status.approved{background:var(--green-dim);color:var(--green);border:1px solid rgba(62,207,142,0.2);}
+.idea-status.inwork{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);}
 .idea-status.rejected{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2);}
+.idea-status.new{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(155,127,232,0.2);}
+
+/* Requests */
+.req-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:8px;display:flex;gap:12px;cursor:pointer;transition:border-color .2s;}
+.req-card:hover{border-color:var(--line2);}
+.req-icon{width:34px;height:34px;border-radius:9px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:2px;}
+.req-info{flex:1;min-width:0;}
+.req-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.req-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:6px;}
+.req-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;}
+.req-status{border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;display:inline-block;}
+.req-status.pending{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,53,0.2);}
+.req-status.accepted{background:var(--green-dim);color:var(--green);border:1px solid rgba(62,207,142,0.2);}
+.req-status.rejected{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2);}
+.req-status.inwork{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);}
+.req-status.done{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(155,127,232,0.2);}
+.req-from{font-size:10px;color:var(--muted);}
+.req-source{border-radius:5px;padding:2px 7px;font-size:9px;font-weight:700;}
+.req-source.olmi{background:var(--pink-dim);color:var(--pink);border:1px solid rgba(255,110,180,0.2);}
+.req-source.razom{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(155,127,232,0.2);}
+.req-source.other{background:var(--card2);color:var(--muted);border:1px solid var(--line2);}
+.req-del{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;transition:color .15s;flex-shrink:0;}
+.req-del:hover{color:var(--red);}
+.req-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.req-filter-btn{background:var(--card2);border:1px solid var(--line2);border-radius:8px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:6px 12px;cursor:pointer;transition:all .15s;}
+.req-filter-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
+.idea-disclaimer{background:var(--purple-dim);border:1px solid rgba(155,127,232,0.2);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--purple);line-height:1.6;}
+.idea-disclaimer strong{color:var(--text);}
+.stale-idea-warn{background:var(--orange-dim);border:1px solid rgba(255,107,53,0.25);border-radius:12px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;}
+.stale-idea-warn:hover{border-color:rgba(255,107,53,0.5);}
+.req-priority{border-radius:5px;padding:2px 7px;font-size:9px;font-weight:700;}
+.req-priority.high{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2);}
+.req-priority.medium{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,53,0.2);}
+.req-priority.low{background:var(--green-dim);color:var(--green);border:1px solid rgba(62,207,142,0.2);}
+.req-date{font-size:10px;color:var(--muted);}
+.req-deadline-badge{font-size:10px;font-weight:700;color:var(--red);}
 .idea-del{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;transition:color .15s;flex-shrink:0;}
 .idea-del:hover{color:var(--red);}
 
@@ -415,6 +452,7 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
   <button class="tab-btn" onclick="switchTab('design',this)">Дизайн</button>
   <button class="tab-btn" onclick="switchTab('shooting',this)">Зйомки</button>
   <button class="tab-btn" onclick="switchTab('ideas',this)">Ідеї</button>
+  <button class="tab-btn" onclick="switchTab('requests',this)">Запити</button>
   <button class="tab-btn asaichi" onclick="switchTab('asaichi',this)">Asaichi</button>
   <div class="sync-badge" style="margin-left:8px"><span class="sync-dot"></span>LIVE</div>
   <div class="user-menu" id="userMenu" style="display:none">
@@ -512,14 +550,20 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
 
 <!-- IDEAS -->
 <div class="page" id="page-ideas">
-  <div class="page-header"><div class="page-eyebrow">пропозиції</div><div class="page-title">Ідеї</div></div>
+  <div class="page-header"><div class="page-eyebrow">натхнення та пропозиції</div><div class="page-title">Ідеї</div></div>
+  <div class="idea-disclaimer">
+    <strong>💡 Це простір для творчих ідей та натхнення</strong><br>
+    Тут фіксуються пропозиції по контенту — для креативу, майбутніх рубрик, нових форматів. Це не стосується конкретних завдань чи прохань — для цього є вкладка <b>Запити</b>.
+  </div>
   <div class="add-bar">
     <button class="btn-primary" onclick="openIdeaAdd()">+ Нова ідея</button>
     <select id="ideaFilterSelect" class="btn-secondary" style="padding: 11px 14px; font-size: 13px; outline: none; appearance: auto;" onchange="renderIdeas()">
       <option value="all">Усі ідеї 💡</option>
       <optgroup label="За статусом">
-        <option value="status:approved">✅ Тільки затверджені</option>
-        <option value="status:dev">🔄 Тільки в розробці</option>
+        <option value="status:review">🔍 На розгляді</option>
+        <option value="status:approved">✅ Затверджено</option>
+        <option value="status:inwork">🔄 В роботі</option>
+        <option value="status:rejected">❌ Відхилено</option>
       </optgroup>
       <optgroup label="За форматом">
         <option value="format:Рілз">🎬 Рілзи</option>
@@ -535,6 +579,23 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
     </select>
   </div>
   <div id="ideasList"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
+</div>
+
+<!-- REQUESTS -->
+<div class="page" id="page-requests">
+  <div class="page-header"><div class="page-eyebrow">прохання команди</div><div class="page-title">За<span>пити</span></div></div>
+  <div class="add-bar">
+    <button class="btn-primary" onclick="openRequestAdd()">+ Новий запит</button>
+  </div>
+  <div class="req-filters">
+    <button class="req-filter-btn active" onclick="setReqFilter('all',this)">Всі</button>
+    <button class="req-filter-btn" onclick="setReqFilter('pending',this)">⏳ Розглядається</button>
+    <button class="req-filter-btn" onclick="setReqFilter('accepted',this)">✅ Прийнято</button>
+    <button class="req-filter-btn" onclick="setReqFilter('inwork',this)">🔄 В роботі</button>
+    <button class="req-filter-btn" onclick="setReqFilter('done',this)">🏁 Виконано</button>
+    <button class="req-filter-btn" onclick="setReqFilter('rejected',this)">❌ Відхилено</button>
+  </div>
+  <div id="requestsList"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
 </div>
 
 <!-- ASAICHI -->
@@ -744,8 +805,9 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
 
     <div class="field-group"><label>Статус</label>
       <select id="ideaStatusInput">
-        <option value="dev">🔄 В розробці</option>
+        <option value="review">🔍 На розгляді</option>
         <option value="approved">✅ Затверджено</option>
+        <option value="inwork">🔄 В роботі</option>
         <option value="rejected">❌ Відхилено</option>
       </select>
     </div>
@@ -2293,6 +2355,58 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('clic
 function fmtDate(str){if(!str)return'';const d=new Date(str+'T00:00:00');return d.toLocaleDateString('uk-UA',{day:'numeric',month:'short'});}
 function formatDateUA(d){return d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});}
 </script>
+<!-- REQUEST ADD/EDIT MODAL -->
+<div class="modal-overlay" id="requestAddModal">
+  <div class="simple-modal" style="max-width:520px">
+    <div class="simple-modal-title" id="requestModalTitle">📬 Новий запит</div>
+    <div class="field-group"><label>Назва запиту</label><input type="text" id="reqTitleInput" placeholder="Коротко про що запит..."></div>
+    <div class="field-group"><label>Деталі</label><textarea id="reqDescInput" rows="3" placeholder="Опиши що саме потрібно зробити..."></textarea></div>
+    <div class="field-group"><label>Від кого / джерело</label>
+      <div style="display:flex;gap:8px;" id="reqSourcePick">
+        <button type="button" class="rp-btn active-req-olmi" onclick="pickReqSource('olmi',this)" id="rsBtnOlmi">🩷 Olmi</button>
+        <button type="button" class="rp-btn" onclick="pickReqSource('razom',this)" id="rsBtnRazom">💜 Разом</button>
+        <button type="button" class="rp-btn" onclick="pickReqSource('other',this)" id="rsBtnOther">📌 Інше</button>
+      </div>
+    </div>
+    <div class="field-group" id="reqSourceOtherWrap" style="display:none"><label>Вкажи джерело</label><input type="text" id="reqSourceOtherInput" placeholder="Наприклад: клієнт, інша команда..."></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="field-group"><label>Пріоритет</label>
+        <select id="reqPriorityInput">
+          <option value="medium">🟡 Середній</option>
+          <option value="high">🔴 Високий</option>
+          <option value="low">🟢 Низький</option>
+        </select>
+      </div>
+      <div class="field-group"><label>Дедлайн (необов'язково)</label><input type="date" id="reqDeadlineInput"></div>
+    </div>
+    <div class="field-group"><label>Тип контенту</label>
+      <select id="reqTypeInput">
+        <option value="">— Не вказано —</option>
+        <option value="Рілз">🎬 Рілз</option>
+        <option value="Фото">📸 Фото</option>
+        <option value="Дизайн">🎨 Дизайн</option>
+        <option value="Сторіс">📱 Сторіс</option>
+        <option value="Текст">✍️ Текст / копірайт</option>
+        <option value="Інше">📌 Інше</option>
+      </select>
+    </div>
+    <div class="field-group"><label>Статус</label>
+      <select id="reqStatusInput">
+        <option value="pending">⏳ Розглядається</option>
+        <option value="accepted">✅ Прийнято</option>
+        <option value="inwork">🔄 В роботі</option>
+        <option value="done">🏁 Виконано</option>
+        <option value="rejected">❌ Відхилено</option>
+      </select>
+    </div>
+    <div class="field-group"><label>Коментар / причина відхилення</label><textarea id="reqCommentInput" rows="2" placeholder="Необов'язково..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModals()">Скасувати</button>
+      <button class="btn-save" id="reqSaveBtn" onclick="saveRequest()">Зберегти</button>
+    </div>
+  </div>
+</div>
+
 <!-- PROFILE MODAL -->
 <div class="modal-overlay" id="profileModal">
   <div class="simple-modal" style="max-width:480px">
