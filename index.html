@@ -32,9 +32,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .tab-btn:hover{color:var(--text);}
 .tab-btn.active{color:var(--accent);}
 .tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);border-radius:2px 2px 0 0;}
-.tab-btn.asaichi{color:var(--orange);}
-.tab-btn.asaichi.active{color:var(--orange);}
-.tab-btn.asaichi.active::after{background:var(--orange);}
+
 .sync-badge{margin-left:auto;flex-shrink:0;display:flex;align-items:center;gap:6px;background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent);font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;padding:5px 12px;border-radius:100px;}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:syncPulse 2s infinite;}
 @keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.3}}
@@ -199,6 +197,9 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:poi
 .rp-btn.active-tier{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
 .rp-btn.active-r9{border-color:var(--blue);background:var(--blue-dim);color:var(--blue);}
 .rp-btn.active-ugc{border-color:var(--pink);background:var(--pink-dim);color:var(--pink);}
+.rp-btn.active-req-olmi{border-color:var(--pink);background:var(--pink-dim);color:var(--pink);}
+.rp-btn.active-req-razom{border-color:var(--purple);background:var(--purple-dim);color:var(--purple);}
+.rp-btn.active-req-other{border-color:var(--muted);background:var(--card2);color:var(--text);}
 
 /* ===== STAGE SLIDERS ===== */
 .stage-slider-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:8px;}
@@ -312,12 +313,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:poi
 .idea-del{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;transition:color .15s;flex-shrink:0;}
 .idea-del:hover{color:var(--red);}
 
-/* Asaichi */
-.asaichi-today-card{background:linear-gradient(135deg,rgba(255,107,53,0.15),rgba(255,107,53,0.05));border:1px solid rgba(255,107,53,0.25);border-radius:20px;padding:24px;margin-bottom:20px;}
-.asaichi-label{font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;}
-.asaichi-big{font-family:'Unbounded',sans-serif;font-size:clamp(48px,10vw,72px);font-weight:900;line-height:1;color:var(--text);}
-.asaichi-big span{color:var(--orange);}
-.asaichi-sub{font-size:13px;color:var(--muted);margin-top:8px;}
+/* Requests */
 .fish-row{display:flex;align-items:center;gap:16px;margin-top:16px;}
 .fish-img{width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(255,107,53,0.3));}
 .fish-phrase{font-size:14px;font-weight:600;color:var(--text);line-height:1.5;}
@@ -354,8 +350,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:poi
 .fish-pct-small{font-size:8px;color:var(--muted);margin-top:1px;}
 .fish-emoji-small{font-size:12px;margin-top:2px;}
 
-/* Asaichi tier list */
-.asaichi-content-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+
 .aci-badge{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 .aci-info{flex:1;min-width:0;}
 .aci-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -453,7 +448,7 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
   <button class="tab-btn" onclick="switchTab('shooting',this)">Зйомки</button>
   <button class="tab-btn" onclick="switchTab('ideas',this)">Ідеї</button>
   <button class="tab-btn" onclick="switchTab('requests',this)">Запити</button>
-  <button class="tab-btn asaichi" onclick="switchTab('asaichi',this)">Asaichi</button>
+
   <div class="sync-badge" style="margin-left:8px"><span class="sync-dot"></span>LIVE</div>
   <div class="user-menu" id="userMenu" style="display:none">
     <div class="user-btn" onclick="toggleUserDropdown()">
@@ -596,43 +591,6 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
     <button class="req-filter-btn" onclick="setReqFilter('rejected',this)">❌ Відхилено</button>
   </div>
   <div id="requestsList"><div class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div></div>
-</div>
-
-<!-- ASAICHI -->
-<div class="page" id="page-asaichi">
-  <div class="page-header"><div class="page-eyebrow">мій особистий звіт</div><div class="page-title">Asai<span>chi</span></div></div>
-
-  <!-- TODAY CARD -->
-  <div class="asaichi-today-card">
-    <div class="asaichi-label" id="asaichiDayLabel">⛩ сьогодні</div>
-    <div class="asaichi-big"><span id="asaichiPct">0</span>%</div>
-    <div class="asaichi-sub" id="asaichiSub">завантаження...</div>
-    <div class="fish-row">
-      <img class="fish-img" id="asaichiFishImg" src="" alt="" style="display:none">
-      <div>
-        <div class="fish-phrase" id="asaichiFishPhrase"></div>
-      </div>
-    </div>
-    <div class="today-note-wrap">
-      <div class="today-note-label">📝 Що зробила сьогодні</div>
-      <textarea class="today-note-input" id="todayNote" rows="3" placeholder="Опиши своїми словами що робила сьогодні..."></textarea>
-      <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;">
-        <div style="background:var(--surface);border:1px solid var(--line2);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--muted);">
-          Приріст за день: <span id="autoGainDisp" style="font-family:'Unbounded',sans-serif;font-size:15px;font-weight:900;color:var(--accent);">—</span>
-        </div>
-        <button class="btn-secondary" style="font-size:12px;padding:8px 16px" onclick="saveTodayNote()">Зберегти день ✓</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- FISH GRID -->
-  <div class="section-title" style="margin-bottom:12px">🐟 Щоденний прогрес</div>
-  <div class="fish-grid-section">
-    <div class="fish-grid" id="fishGrid"></div>
-  </div>
-
-  <div class="section-title" style="margin-bottom:12px;margin-top:4px">📋 Мій контент (Tier)</div>
-  <div id="asaichiList"></div>
 </div>
 
 <!-- ===== DETAIL MODAL (content cards) ===== -->
@@ -827,16 +785,6 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
   </div>
 </div>
 
-<!-- FISH DAY MODAL -->
-<div class="modal-overlay" id="fishDayModal">
-  <div class="simple-modal">
-    <div class="simple-modal-title" id="fishDayTitle">День —</div>
-    <div id="fishDayContent" style="font-size:14px;line-height:1.8;color:var(--muted);"></div>
-    <div class="modal-actions" style="margin-top:16px">
-      <button class="btn-cancel" onclick="closeModals()">Закрити</button>
-    </div>
-  </div>
-</div>
 
 <script>
 // Global bridge for onclick handlers - delegates to module functions
@@ -963,10 +911,6 @@ function updateUserUI() {
 
 function applyRoleRestrictions() {
   const isAdmin = currentUserRole === 'admin';
-  // Hide Asaichi tab for non-admins
-  document.querySelectorAll('.tab-btn.asaichi').forEach(btn => {
-    btn.style.display = isAdmin ? '' : 'none';
-  });
   // Disable sliders for non-admins
   document.querySelectorAll('.month-settings input[type=range]').forEach(inp => {
     if(!isAdmin) inp.disabled = true;
@@ -1155,9 +1099,9 @@ function randomPhrase(fishKey) {
 function toDateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
 // STATE
-let allData = {}; // {monthKey: {reels, photos, designs, shoots, settings, dayLogs}}
+let allData = {}; // {monthKey: {reels, photos, designs, shoots, settings}}
 let ideas = {};
-let reels={}, photos={}, designs={}, shoots={}, dayLogs={};
+let reels={}, photos={}, designs={}, shoots={};
 let settings={reelsTarget:12,photoTarget:4,designTarget:6};
 let calYear, calMonth;
 let addCollection = 'reels';
@@ -1219,7 +1163,6 @@ function loadData(){
   onValue(ref(db,'photos'), s=>{photos=s.val()||{};renderAll();});
   onValue(ref(db,'designs'), s=>{designs=s.val()||{};renderAll();});
   onValue(ref(db,'shoots'), s=>{shoots=s.val()||{};renderShooting();renderCalendar();});
-  onValue(ref(db,'dayLogs'), s=>{dayLogs=s.val()||{};renderAsaichi();});
   onValue(ref(db,'settings'), s=>{
     if(s.val()){
       settings={reelsTarget:12,photoTarget:4,designTarget:6,...s.val()};
@@ -1243,7 +1186,7 @@ onValue(ref(db,'ideas'), s=>{ideas=s.val()||{};renderIdeas();});
 
 // Init handled by onAuthStateChanged
 
-function renderAll(){renderDashboard();renderContentList('reels');renderContentList('photos');renderContentList('designs');renderCalendar();renderAsaichi();}
+function renderAll(){renderDashboard();renderContentList('reels');renderContentList('photos');renderContentList('designs');renderCalendar();}
 
 function updateMonthUI(){
   // No month switcher anymore - always editable
@@ -1341,6 +1284,21 @@ function renderWarnings(){
   Object.values(photos).forEach(p=>check(p,'photos'));
   Object.values(designs).forEach(d=>check(d,'designs'));
   wrap.innerHTML=warns.map(w=>`<div class="warning-item"><span>⚠️</span><div class="wi-text"><b>${w.name}</b> — ${w.pct}% готово</div><div class="wi-days">${w.diff===0?'сьогодні':w.diff===1?'завтра':w.diff+' дн'}</div></div>`).join('');
+
+  // Stale ideas warning
+  const now=Date.now();
+  const staleIdeas=Object.values(ideas||{}).filter(idea=>{
+    const st=idea.status||'review';
+    const age=now-(idea.createdAt||now);
+    return (st==='review'||st==='new')&&age>30*24*60*60*1000;
+  });
+  if(staleIdeas.length){
+    const staleWarn=document.createElement('div');
+    staleWarn.className='stale-idea-warn';
+    staleWarn.innerHTML=`<span>💡</span><div><b>${staleIdeas.length} ідей${staleIdeas.length>1?'':'у'} не розглянуто більше 30 днів</b> — перейди у вкладку Ідеї</div>`;
+    staleWarn.onclick=()=>{ document.querySelector('[onclick*="ideas"]')?.click(); };
+    wrap.appendChild(staleWarn);
+  }
 }
 
 function renderInProgress(){
@@ -1856,47 +1814,63 @@ window.renderIdeas = function renderIdeas() {
   const el = document.getElementById('ideasList');
   let list = Object.entries(ideas);
 
-  // === НОВЕ: ЛОГІКА ФІЛЬТРАЦІЇ ===
   const filterVal = document.getElementById('ideaFilterSelect')?.value || 'all';
-  
   if (filterVal !== 'all') {
-    // Розрізаємо значення (наприклад 'format:Рілз' -> ['format', 'Рілз'])
-    const [filterType, filterValue] = filterVal.split(':'); 
-    
+    const [filterType, filterValue] = filterVal.split(':');
     list = list.filter(([id, idea]) => {
-      if (filterType === 'status') return (idea.status || 'dev') === filterValue;
+      if (filterType === 'status') return (idea.status || 'review') === filterValue;
       if (filterType === 'format') return (idea.formats || []).includes(filterValue);
       if (filterType === 'rubric') return (idea.rubrics || []).includes(filterValue);
       return true;
     });
   }
-  // ===============================
 
   if (!list.length) {
     el.innerHTML = '<div class="empty"><div class="big">💡</div>За цим фільтром нічого не знайдено</div>';
     return;
   }
-  
-  const sl = { dev: '🔄 В розробці', approved: '✅ Затверджено', rejected: '❌ Відхилено' };
-  
-  el.innerHTML = list.map(([id, idea]) => `
+
+  const sl = {
+    review: '🔍 На розгляді',
+    approved: '✅ Затверджено',
+    inwork: '🔄 В роботі',
+    rejected: '❌ Відхилено',
+    // legacy
+    dev: '🔄 В роботі',
+    new: '🔍 На розгляді'
+  };
+
+  // check stale ideas (review > 30 days)
+  const now = Date.now();
+  const staleIds = list
+    .filter(([,idea]) => {
+      const st = idea.status || 'review';
+      const age = now - (idea.createdAt || now);
+      return (st === 'review' || st === 'new') && age > 30*24*60*60*1000;
+    })
+    .map(([id]) => id);
+
+  el.innerHTML = list.map(([id, idea]) => {
+    const st = idea.status || 'review';
+    const stLabel = sl[st] || sl.review;
+    const stClass = st === 'dev' ? 'inwork' : st === 'new' ? 'review' : st;
+    const isStale = staleIds.includes(id);
+    return `
     <div class="idea-card" onclick="openIdeaDetail('${id}')">
       <div class="idea-icon">💡</div>
       <div class="idea-info">
-        <div class="idea-title">${idea.title}</div>
+        <div class="idea-title">${idea.title}${isStale ? ' <span style="color:var(--orange);font-size:11px">⚠️ 30+ днів</span>' : ''}</div>
         ${idea.desc ? `<div class="idea-desc">${idea.desc}</div>` : ''}
         ${(idea.photos||[]).length ? `<div style="margin-top:8px;font-size:11px;color:var(--muted)">🖼 ${idea.photos.length} фото</div>` : ''}
-        
         ${idea.author ? `<div style="margin-top:6px;font-size:10px;color:var(--muted)">👤 Запропонував/ла: <b>${idea.author}</b></div>` : ''}
         ${idea.lastEditedBy ? `<div style="margin-top:2px;font-size:10px;color:var(--muted)">✏️ Останні зміни: <b>${idea.lastEditedBy}</b></div>` : ''}
-        
-        ${(idea.formats||[]).length ? `<div style="display:flex; gap:4px; margin-top:8px">${idea.formats.map(f => `<span style="background:var(--blue-dim); color:var(--blue); padding:2px 6px; border-radius:4px; font-size:9px">${f}</span>`).join('')}</div>` : ''}
-        ${(idea.rubrics||[]).length ? `<div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:4px">${idea.rubrics.map(r => `<span style="background:var(--purple-dim); color:var(--purple); padding:2px 6px; border-radius:4px; font-size:9px">${r}</span>`).join('')}</div>` : ''}
-        
-        <div class="idea-status ${idea.status || 'dev'}">${sl[idea.status || 'dev']}</div>
+        ${(idea.formats||[]).length ? `<div style="display:flex;gap:4px;margin-top:8px">${idea.formats.map(f=>`<span style="background:var(--blue-dim);color:var(--blue);padding:2px 6px;border-radius:4px;font-size:9px">${f}</span>`).join('')}</div>` : ''}
+        ${(idea.rubrics||[]).length ? `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${idea.rubrics.map(r=>`<span style="background:var(--purple-dim);color:var(--purple);padding:2px 6px;border-radius:4px;font-size:9px">${r}</span>`).join('')}</div>` : ''}
+        <div class="idea-status ${stClass}">${stLabel}</div>
       </div>
       <button class="idea-del" onclick="event.stopPropagation();deleteIdea('${id}')">×</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 window.toggleIdeaTag = function(item, isFormat, el) {
@@ -1978,7 +1952,7 @@ window.openIdeaAdd = function() {
   ideaPhotos = [];
   document.getElementById('ideaTitleInput').value = '';
   document.getElementById('ideaDescInput').value = '';
-  document.getElementById('ideaStatusInput').value = 'dev';
+  document.getElementById('ideaStatusInput').value = 'review';
   document.getElementById('ideaPhotoGrid').innerHTML = '';
   
   window._ideaCurrentFormats = [];
@@ -2025,7 +1999,9 @@ window.openIdeaDetail = function(id){
   ideaPhotos=[...(idea.photos||[])];
   document.getElementById('ideaTitleInput').value=idea.title||'';
   document.getElementById('ideaDescInput').value=idea.desc||'';
-  document.getElementById('ideaStatusInput').value=idea.status||'dev';
+  const legacySt = {dev:'inwork', new:'review'};
+  const curSt = idea.status || 'review';
+  document.getElementById('ideaStatusInput').value = legacySt[curSt] || curSt;
   renderIdeaPhotos();
 
   window._ideaCurrentFormats = [...(idea.formats||[])];
@@ -2051,214 +2027,143 @@ window.openIdeaDetail = function(id){
 
 window.deleteIdea=function(id){if(!confirm('Видалити?'))return;remove(ref(db,'ideas/'+id));}
 
-// ===== ASAICHI =====
-function renderAsaichi(){
-  const pct=tierPct();
-  const today=new Date();
-  const yr=today.getFullYear(), mo=today.getMonth();
-  const monthKey=toMonthKey(today);
-  const workDays=countWorkdays(monthKey);
-  const dailyTarget=parseFloat((100/workDays).toFixed(1));
-  const todayStr=toDateStr(new Date());
-  const todayLog=dayLogs[todayStr];
+// ===== REQUESTS =====
+let requests = {};
+let reqFilter = 'all';
+let _editReqId = null;
+let _reqSource = 'olmi';
 
-  // Today card
-  document.getElementById('asaichiPct').textContent=pct;
-  recordDayStart();
-  updateAutoGainDisp();
-  document.getElementById('asaichiDayLabel').textContent='⛩ '+formatDateUA(new Date());
-  const autoWorkdays=workDays;
-  document.getElementById('asaichiSub').textContent=`tier · ${dailyTarget}% на день · ${autoWorkdays} робочих днів`;
+onValue(ref(db,'requests'), s=>{requests=s.val()||{};renderRequests();});
 
-  // Fish for today
-  const todayGain=todayLog?.gainPct??null;
-  const fishKey=todayGain!=null?getFishForPct(todayGain,dailyTarget):null;
-  const fishImg=document.getElementById('asaichiFishImg');
-  const fishPhrase=document.getElementById('asaichiFishPhrase');
-  if(fishKey){
-    fishImg.src=FISH_DATA[fishKey].src;
-    fishImg.style.display='block';
-    const phrase=todayLog.phrase||randomPhrase(fishKey);
-    fishPhrase.innerHTML=phrase.replace('\n','<em>')+('</em>');
-  } else {
-    fishImg.style.display='none';
-    fishPhrase.textContent='Опиши свій день і оціни продуктивність ↓';
+window.setReqFilter = function(f, btn) {
+  reqFilter = f;
+  document.querySelectorAll('.req-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRequests();
+};
+
+window.renderRequests = function() {
+  const el = document.getElementById('requestsList');
+  if(!el) return;
+  let list = Object.entries(requests).sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
+  if(reqFilter !== 'all') list = list.filter(([,r])=>(r.status||'pending')===reqFilter);
+
+  if(!list.length){
+    el.innerHTML='<div class="empty"><div class="big">📬</div>'+(reqFilter==='all'?'Запитів ще немає':'За цим фільтром нічого немає')+'</div>';
+    return;
   }
 
-  // Today note
-  if(todayLog?.note) document.getElementById('todayNote').value=todayLog.note;
+  const sl={pending:'⏳ Розглядається',accepted:'✅ Прийнято',inwork:'🔄 В роботі',done:'🏁 Виконано',rejected:'❌ Відхилено'};
+  const srcLabel={olmi:'🩷 Olmi',razom:'💜 Разом',other:'📌 Інше'};
+  const prLabel={high:'🔴 Високий',medium:'🟡 Середній',low:'🟢 Низький'};
 
-  // Fish grid — real calendar dates, 7-col layout starting Monday
-  const grid=document.getElementById('fishGrid');
-  grid.innerHTML='';
-
-  // Add weekday headers
-  ['пн','вт','ср','чт','пт','сб','нд'].forEach(wd=>{
-    const h=document.createElement('div');
-    h.style.cssText='text-align:center;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 0;';
-    h.textContent=wd;
-    grid.appendChild(h);
-  });
-
-  const nowD=new Date(); nowD.setHours(0,0,0,0);
-  const daysInMonth=new Date(yr,mo+1,0).getDate();
-
-  // count total workdays in month
-  let totalWorkdays=0;
-  for(let d=1;d<=daysInMonth;d++){
-    const dow=new Date(yr,mo,d).getDay();
-    if(dow!==0&&dow!==6) totalWorkdays++;
-  }
-
-  // count workdays passed up to and including today
-  let workdaysPassed=0;
-  for(let d=1;d<=daysInMonth;d++){
-    const dt=new Date(yr,mo,d); dt.setHours(0,0,0,0);
-    const dow=dt.getDay();
-    if(dow!==0&&dow!==6){
-      if(dt<=nowD) workdaysPassed++;
-    }
-  }
-
-  const expectedPct=totalWorkdays?Math.round((workdaysPassed/totalWorkdays)*100):0;
-  document.getElementById('asaichiSub').textContent=
-    `tier · ${dailyTarget}% на день · ${totalWorkdays} робочих днів · очікується ${expectedPct}%`;
-
-  // offset: first day of month
-  const firstDow=new Date(yr,mo,1).getDay();
-  const offset=firstDow===0?6:firstDow-1;
-  for(let i=0;i<offset;i++){
-    const blank=document.createElement('div');
-    grid.appendChild(blank);
-  }
-
-  // render each day
-  for(let d=1;d<=daysInMonth;d++){
-    const dt=new Date(yr,mo,d); dt.setHours(0,0,0,0);
-    const ds=toDateStr(dt);
-    const dow=dt.getDay();
-    const isWeekend=dow===0||dow===6;
-    const isToday=ds===todayStr;
-    const isPast=dt<nowD;
-    const log=dayLogs[ds];
-
-    let fishKey=null;
-    if(!isWeekend&&(isPast||isToday)&&log?.fish) fishKey=log.fish;
-
-    const cell=document.createElement('div');
-    let cls='fish-cell';
-    if(isWeekend) cls+=' fish-weekend';
-    else if(isToday) cls+=' today';
-    else if(isPast&&log) cls+=` logged ${log.fish||''}`;
-    else if(isPast&&!log) cls+=' fish-missed';
-
-    let emoji='';
-    if(isWeekend) emoji='😴';
-    else if(fishKey==='karass') emoji='🐟';
-    else if(fishKey==='skumbria') emoji='🎏';
-    else if(fishKey==='shark') emoji='🦈';
-    else if(isPast) emoji='—';
-    else emoji='·';
-
-    const gainPct=log?.gainPct!=null?`+${log.gainPct}%`:'';
-
-    cell.className=cls;
-    cell.innerHTML=`
-      <div class="fish-day-num">${d}</div>
-      ${gainPct?`<div class="fish-pct-small">${gainPct}</div>`:''}
-      <div class="fish-emoji-small">${emoji}</div>`;
-
-    if(!isWeekend){
-      cell.style.cursor='pointer';
-      cell.addEventListener('click',()=>openFishDay(ds, d, log));
-    }
-    grid.appendChild(cell);
-  }
-
-  // Tier list
-  const tierItems=[
-    ...Object.entries(reels).filter(([,r])=>!r.responsible||r.responsible==='tier').map(([id,r])=>({id,col:'reels',...r,_pct:reelPct(r)})),
-    ...Object.entries(photos).filter(([,p])=>!p.responsible||p.responsible==='tier').map(([id,p])=>({id,col:'photos',...p,_pct:photoPct(p)})),
-    ...Object.entries(designs).filter(([,d])=>d.responsible==='tier').map(([id,d])=>({id,col:'designs',...d,_pct:designPct(d)})),
-  ].sort((a,b)=>b._pct-a._pct);
-
-  const el=document.getElementById('asaichiList');
-  if(!tierItems.length){el.innerHTML='<div class="empty">Контент tier ще не додано</div>';return;}
-  el.innerHTML=tierItems.map(item=>{
-    const icon=item.col==='photos'?'📸':item.col==='designs'?'🎨':(COMPLEXITY_ICON[item.complexity]||'🎬');
-    const cls=item.col==='photos'?'photo':item.col==='designs'?'design':(item.complexity||'simple');
-    const pc=item._pct>=100?'done':item._pct>=30?'mid':'low';
-    return `<div class="asaichi-content-item">
-      <div class="aci-badge ${cls}">${icon}</div>
-      <div class="aci-info">
-        <div class="aci-name">${item.name}</div>
-        <div class="aci-meta">${item.deadline?'📅 '+fmtDate(item.deadline):''}</div>
+  el.innerHTML = list.map(([id,r])=>{
+    const st = r.status||'pending';
+    const src = r.source||'other';
+    const srcDisp = src==='other'?(r.sourceOther||'Інше'):srcLabel[src]||src;
+    const pr = r.priority||'medium';
+    const dl = r.deadline ? `<span class="req-deadline-badge">📅 ${fmtDate(r.deadline)}</span>` : '';
+    return `<div class="req-card" onclick="openRequestEdit('${id}')">
+      <div class="req-icon">${src==='olmi'?'🩷':src==='razom'?'💜':'📌'}</div>
+      <div class="req-info">
+        <div class="req-title">${r.title||'(без назви)'}</div>
+        ${r.desc?`<div class="req-desc">${r.desc}</div>`:''}
+        <div class="req-meta">
+          <span class="req-status ${st}">${sl[st]}</span>
+          <span class="req-source ${src}">${srcDisp}</span>
+          <span class="req-priority ${pr}">${prLabel[pr]}</span>
+          ${r.type?`<span style="background:var(--blue-dim);color:var(--blue);border-radius:5px;padding:2px 7px;font-size:9px;font-weight:700">${r.type}</span>`:''}
+          ${dl}
+        </div>
+        ${r.comment?`<div style="margin-top:6px;font-size:11px;color:var(--muted);font-style:italic">💬 ${r.comment}</div>`:''}
+        <div class="req-from">Додано: ${r.createdAt?new Date(r.createdAt).toLocaleDateString('uk-UA'):'-'}${r.author?' · '+r.author:''}</div>
       </div>
-      <div class="aci-pct ${pc}" style="color:${item._pct>=100?'var(--green)':item._pct>=30?'var(--orange)':'var(--muted)'}">${item._pct}%</div>
+      <button class="req-del" onclick="event.stopPropagation();deleteRequest('${id}')">×</button>
     </div>`;
   }).join('');
-}
+};
 
-window.openFishDay=function(dateStr, dayNum, log){
-  const dt=new Date(dateStr+'T00:00:00');
-  const label=dt.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
-  document.getElementById('fishDayTitle').textContent=label;
-  const todayStr=toDateStr(new Date());
-  let html='';
-  if(log){
-    const fishKey=log.fish||'skumbria';
-    const fishName={karass:'Карась 🐟',skumbria:'Скумбрія 🎏',shark:'Акула 🦈'};
-    html+=`<div style="margin-bottom:12px">
-      <span style="font-family:'Unbounded',sans-serif;font-size:24px;font-weight:900;color:var(--orange)">${log.gainPct||0}%</span>
-      <span style="color:var(--muted);font-size:12px;margin-left:8px">приріст за день</span>
-    </div>`;
-    html+=`<div style="margin-bottom:10px"><b>${fishName[fishKey]}</b></div>`;
-    if(log.verdict) html+=`<div style="margin-bottom:10px;color:var(--text)">${log.verdict}</div>`;
-    if(log.note) html+=`<div style="padding:10px;background:var(--surface);border-radius:8px;font-size:13px;color:var(--muted);line-height:1.6">"${log.note}"</div>`;
-  } else if(dateStr===todayStr){
-    html='<div style="color:var(--accent)">Сьогодні! Опиши свій день і натисни "Оцінити продуктивність" вгорі ↑</div>';
+window.openRequestAdd = function() {
+  _editReqId = null;
+  _reqSource = 'olmi';
+  document.getElementById('requestModalTitle').textContent = '📬 Новий запит';
+  document.getElementById('reqTitleInput').value = '';
+  document.getElementById('reqDescInput').value = '';
+  document.getElementById('reqCommentInput').value = '';
+  document.getElementById('reqPriorityInput').value = 'medium';
+  document.getElementById('reqStatusInput').value = 'pending';
+  document.getElementById('reqTypeInput').value = '';
+  document.getElementById('reqDeadlineInput').value = '';
+  document.getElementById('reqSourceOtherWrap').style.display = 'none';
+  document.getElementById('reqSaveBtn').onclick = saveRequest;
+  // reset source buttons
+  document.querySelectorAll('#reqSourcePick .rp-btn').forEach(b=>b.className='rp-btn');
+  document.getElementById('rsBtnOlmi').className='rp-btn active-req-olmi';
+  document.getElementById('requestAddModal').classList.add('open');
+  setTimeout(()=>document.getElementById('reqTitleInput').focus(),100);
+};
+
+window.openRequestEdit = function(id) {
+  const r = requests[id]; if(!r) return;
+  _editReqId = id;
+  _reqSource = r.source || 'olmi';
+  document.getElementById('requestModalTitle').textContent = '✏️ Редагувати запит';
+  document.getElementById('reqTitleInput').value = r.title||'';
+  document.getElementById('reqDescInput').value = r.desc||'';
+  document.getElementById('reqCommentInput').value = r.comment||'';
+  document.getElementById('reqPriorityInput').value = r.priority||'medium';
+  document.getElementById('reqStatusInput').value = r.status||'pending';
+  document.getElementById('reqTypeInput').value = r.type||'';
+  document.getElementById('reqDeadlineInput').value = r.deadline||'';
+  const isOther = _reqSource==='other';
+  document.getElementById('reqSourceOtherWrap').style.display = isOther?'block':'none';
+  if(isOther) document.getElementById('reqSourceOtherInput').value = r.sourceOther||'';
+  // set source buttons
+  document.querySelectorAll('#reqSourcePick .rp-btn').forEach(b=>b.className='rp-btn');
+  const map={olmi:'rsBtnOlmi',razom:'rsBtnRazom',other:'rsBtnOther'};
+  if(map[_reqSource]) document.getElementById(map[_reqSource]).className=`rp-btn active-req-${_reqSource}`;
+  document.getElementById('reqSaveBtn').onclick = saveRequest;
+  document.getElementById('requestAddModal').classList.add('open');
+};
+
+window.pickReqSource = function(val, btn) {
+  _reqSource = val;
+  document.querySelectorAll('#reqSourcePick .rp-btn').forEach(b=>b.className='rp-btn');
+  btn.className = `rp-btn active-req-${val}`;
+  document.getElementById('reqSourceOtherWrap').style.display = val==='other'?'block':'none';
+};
+
+window.saveRequest = function() {
+  const title = document.getElementById('reqTitleInput').value.trim();
+  if(!title) return;
+  const data = {
+    title,
+    desc: document.getElementById('reqDescInput').value.trim(),
+    status: document.getElementById('reqStatusInput').value,
+    source: _reqSource,
+    sourceOther: _reqSource==='other'?document.getElementById('reqSourceOtherInput').value.trim():'',
+    priority: document.getElementById('reqPriorityInput').value,
+    type: document.getElementById('reqTypeInput').value,
+    deadline: document.getElementById('reqDeadlineInput').value||null,
+    comment: document.getElementById('reqCommentInput').value.trim(),
+  };
+  if(_editReqId) {
+    update(ref(db,'requests/'+_editReqId), data);
   } else {
-    html='<div style="color:var(--muted)">Цей день не було залоговано.</div>';
+    data.createdAt = Date.now();
+    data.author = currentUser?.displayName || currentUser?.email || '';
+    push(ref(db,'requests'), data);
   }
-  document.getElementById('fishDayContent').innerHTML=html;
-  document.getElementById('fishDayModal').classList.add('open');
-}
+  closeModals();
+};
 
-// Auto-gain: track pct at day start in Firebase, calc diff on save
-window.saveTodayNote=function(){
-  const note=document.getElementById('todayNote').value.trim();
-  const todayStr=toDateStr(new Date());
-  const existing=dayLogs[todayStr]||{};
-  const currentPct=tierPct();
-  const startPct=existing.startPct!=null?existing.startPct:currentPct;
-  const gainPct=parseFloat(Math.max(0, currentPct-startPct).toFixed(1));
-  const monthKey=toMonthKey(new Date());
-  const workDays=countWorkdays(monthKey);
-  const dailyTarget=parseFloat((100/workDays).toFixed(1));
-  const fish=gainPct<dailyTarget?'karass':gainPct<=dailyTarget+0.5?'skumbria':'shark';
-  const phrase=randomPhrase(fish);
-  set(ref(db,`dayLogs/${todayStr}`),{...existing,note,gainPct,fish,phrase,startPct,savedAt:Date.now()});
-}
-// Record start pct when page loads for today
-function recordDayStart(){
-  const todayStr=toDateStr(new Date());
-  const existing=dayLogs[todayStr]||{};
-  if(existing.startPct==null){
-    const currentPct=tierPct();
-    set(ref(db,`dayLogs/${todayStr}`),{...existing,startPct:currentPct});
-  }
-}
+window.deleteRequest = function(id) {
+  if(!confirm('Видалити запит?')) return;
+  remove(ref(db,'requests/'+id));
+};
 
-// Update auto gain display
-function updateAutoGainDisp(){
-  const todayStr=toDateStr(new Date());
-  const existing=dayLogs[todayStr]||{};
-  const currentPct=tierPct();
-  const startPct=existing.startPct!=null?existing.startPct:currentPct;
-  const gain=parseFloat(Math.max(0,currentPct-startPct).toFixed(1));
-  const el=document.getElementById('autoGainDisp');
-  if(el) el.textContent='+'+gain+'%';
-}
+
+// ===== SLIDERS =====
 
 // ===== SLIDERS =====
 window.onSlider=function(){
