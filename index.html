@@ -556,6 +556,7 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
       <option value="all">Усі ідеї 💡</option>
       <optgroup label="За статусом">
         <option value="status:review">🔍 На розгляді</option>
+        <option value="status:review">⏯️ На паузі</option>
         <option value="status:approved">✅ Затверджено</option>
         <option value="status:inwork">🔄 В роботі</option>
         <option value="status:rejected">❌ Відхилено</option>
@@ -570,6 +571,10 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
         <option value="rubric:Life контент">☕ Life контент</option>
         <option value="rubric:Розважальне">🤪 Розважальне</option>
         <option value="rubric:Пізнавальне">🧠 Пізнавальне</option>
+        <option value="rubric:Пізнавальне">🚪 Реліз</option>
+        <option value="rubric:Пізнавальне">🎽 Події</option>
+        <option value="rubric:Пізнавальне">🌸 Аестхетік</option>
+        <option value="rubric:Пізнавальне">💪 Маніфести</option>
       </optgroup>
     </select>
   </div>
@@ -753,7 +758,7 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
   <div class="simple-modal">
     <div class="simple-modal-title">💡 Нова ідея</div>
     <div class="field-group"><label>Назва</label><input type="text" id="ideaTitleInput" placeholder="Назва ідеї..."></div>
-    <div class="field-group"><label>Опис</label><textarea id="ideaDescInput" rows="3" placeholder="Деталі..."></textarea></div>
+    <div class="field-group"><label>Опис чи референс</label><textarea id="ideaDescInput" rows="3" placeholder="Деталі..."></textarea></div>
     
     <div class="field-group">
       <label>Формат (можна декілька)</label>
@@ -767,13 +772,14 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
     <div class="field-group"><label>Статус</label>
       <select id="ideaStatusInput">
         <option value="review">🔍 На розгляді</option>
+        <option value="review">⏯️ На паузі</option>
         <option value="approved">✅ Затверджено</option>
         <option value="inwork">🔄 В роботі</option>
         <option value="rejected">❌ Відхилено</option>
       </select>
     </div>
     <div class="field-group">
-      <label>Фото (лише для перегляду)</label>
+      <label>Фото</label>
       <div class="photo-grid" id="ideaPhotoGrid"></div>
       <div class="photo-upload-area" onclick="document.getElementById('ideaPhotoInput').click()">
         <input type="file" id="ideaPhotoInput" accept="image/*" multiple onchange="handleIdeaPhotoUpload(event)">
@@ -841,7 +847,7 @@ onAuthStateChanged(auth, async user => {
     if(!userData && !isAdmin) {
       // Unknown user - sign out
       await signOut(auth);
-      showAuthError('Немає доступу. Зверніться до адміністратора.');
+      showAuthError('Немає доступу. Зверніться до Катеринки.');
       return;
     }
     
@@ -855,7 +861,7 @@ onAuthStateChanged(auth, async user => {
       
       if(!role && !isAdmin) {
         await signOut(auth);
-        showAuthError('Немає доступу. Зверніться до адміністратора.');
+        showAuthError('Немає доступу. Зверніться до Катеринки.');
         return;
       }
       
