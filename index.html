@@ -1679,9 +1679,7 @@ function renderCalendar(){
   const deadlines={};
   const addDL=(item,type,collection,id)=>{
     if(!item.deadline) return;
-    const pct=itemPct(item,collection);
-    if(pct>=100) return; // закриті задачі (постинг=done) не показуємо
-    if(!deadlines[item.deadline]) deadlines[item.deadline]=[];
+if(!deadlines[item.deadline]) deadlines[item.deadline]=[];
     deadlines[item.deadline].push({name:item.name,type,collection,id});
   };
   Object.entries(reels).forEach(([id,r])=>addDL(r,r.complexity||'simple','reels',id));
