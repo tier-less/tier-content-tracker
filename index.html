@@ -642,7 +642,7 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
           <label>Фото</label>
           <div class="photo-grid" id="dPhotoGrid"></div>
           <div class="photo-upload-area" onclick="document.getElementById('dPhotoInput').click()">
-            <input type="file" id="dPhotoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)">
+            <input type="file" id="dPhotoInput" accept="image/*,video/*" multiple onchange="handlePhotoUpload(event)">
             <div class="photo-upload-icon">🖼</div>
             <div class="photo-upload-text">Клікни щоб додати фото</div>
           </div>
