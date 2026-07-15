@@ -782,7 +782,7 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
       <label>Фото</label>
       <div class="photo-grid" id="ideaPhotoGrid"></div>
       <div class="photo-upload-area" onclick="document.getElementById('ideaPhotoInput').click()">
-        <input type="file" id="ideaPhotoInput" accept="image/*" multiple onchange="handleIdeaPhotoUpload(event)">
+        <input type="file" id="ideaPhotoInput" accept="image/*,video/*" multiple onchange="handleIdeaPhotoUpload(event)">
         <div class="photo-upload-icon">🖼</div>
         <div class="photo-upload-text">Клікни щоб додати фото</div>
       </div>
@@ -1557,19 +1557,21 @@ window.removeDTag = function(i){detailTags.splice(i,1);renderDetailTags();}
 window.handlePhotoUpload = function(e) {
   const files=Array.from(e.target.files);
   files.forEach(f=>{
-    const reader=new FileReader();
-    reader.onload=ev=>{detailPhotos.push(ev.target.result);renderDetailPhotos();};
-    reader.readAsDataURL(f);
-  });
+   const reader=new FileReader();
+   reader.onload=ev=>{detailPhotos.push({src: ev.target.result, type: f.type});renderDetailPhotos();};
+   reader.readAsDataURL(f);
+ });
 }
 
 function renderDetailPhotos(){
   const grid=document.getElementById('dPhotoGrid');
-  grid.innerHTML=detailPhotos.map((src,i)=>`
-    <div class="photo-thumb">
-      <img src="${src}" alt="">
-      <button class="photo-thumb-del" onclick="removeDetailPhoto(${i})">×</button>
-    </div>`).join('');
+  grid.innerHTML=detailPhotos.map((p,i)=>{
+    const isVideo = p.type && p.type.startsWith('video/');
+    const media = isVideo
+      ? `<video src="${p.src}" muted></video>`
+      : `<img src="${p.src}" alt="">`;
+    return `<div class="photo-thumb">${media}<button class="photo-thumb-del" onclick="removeDetailPhoto(${i})">×</button></div>`;
+  }).join('');
 }
 
 window.removeDetailPhoto = function(i){detailPhotos.splice(i,1);renderDetailPhotos();}
@@ -1972,16 +1974,24 @@ window.openIdeaAdd = function() {
 };
 
 window.handleIdeaPhotoUpload = function(e){
-  Array.from(e.target.files).forEach(f=>{
-    const reader=new FileReader();
-    reader.onload=ev=>{ideaPhotos.push(ev.target.result);renderIdeaPhotos();};
-    reader.readAsDataURL(f);
-  });
+ Array.from(e.target.files).forEach(f=>{
+   const reader=new FileReader();
+   reader.onload=ev=>{
+     ideaPhotos.push({src: ev.target.result, type: f.type});
+     renderIdeaPhotos();
+   };
+   reader.readAsDataURL(f);
+ });
 };
 
 function renderIdeaPhotos(){
-  document.getElementById('ideaPhotoGrid').innerHTML=ideaPhotos.map((src,i)=>`
-    <div class="photo-thumb"><img src="${src}" alt=""><button class="photo-thumb-del" onclick="removeIdeaPhoto(${i})">×</button></div>`).join('');
+ document.getElementById('ideaPhotoGrid').innerHTML=ideaPhotos.map((p,i)=>{
+   const isVideo = p.type && p.type.startsWith('video/');
+   const media = isVideo
+     ? `<video src="${p.src}" muted></video>`
+     : `<img src="${p.src}" alt="">`;
+   return `<div class="photo-thumb">${media}<button class="photo-thumb-del" onclick="removeIdeaPhoto(${i})">×</button></div>`;
+ }).join('');
 }
 
 window.removeIdeaPhoto = function(i){ideaPhotos.splice(i,1);renderIdeaPhotos();};
