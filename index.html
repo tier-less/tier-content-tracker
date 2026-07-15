@@ -231,7 +231,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:poi
 .photo-upload-text{font-size:13px;color:var(--muted);}
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
 .photo-thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--surface);}
-.photo-thumb img{width:100%;height:100%;object-fit:cover;}
+.photo-thumb img,.photo-thumb video{width:100%;height:100%;object-fit:cover;}
 .photo-thumb-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.7);border:none;color:white;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
 
 /* Modal footer */
@@ -642,10 +642,18 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
           <label>Фото</label>
           <div class="photo-grid" id="dPhotoGrid"></div>
           <div class="photo-upload-area" onclick="document.getElementById('dPhotoInput').click()">
-            <input type="file" id="dPhotoInput" accept="image/*,video/*" multiple onchange="handlePhotoUpload(event)">
+            <input type="file" id="dPhotoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)">
             <div class="photo-upload-icon">🖼</div>
             <div class="photo-upload-text">Клікни щоб додати фото</div>
           </div>
+        </div>
+        <div class="field-group">
+          <label>Відео (посилання: Instagram, Drive, Vimeo...)</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="dVideoLinkInput" placeholder="https://..." style="flex:1;background:var(--surface);border:1px solid var(--line2);border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;padding:10px 13px;outline:none;">
+            <button type="button" class="btn-save" onclick="addDetailVideoLink()">Додати</button>
+          </div>
+          <div id="dVideoLinksList" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
         </div>
         <div class="field-group"><label>Теги</label>
           <div class="tag-input-wrap" id="dTagWrap" onclick="document.getElementById('dTagInput').focus()">
@@ -781,13 +789,21 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
       </select>
     </div>
     <div class="field-group">
-      <label>Фото й відео</label>
+      <label>Фото</label>
       <div class="photo-grid" id="ideaPhotoGrid"></div>
       <div class="photo-upload-area" onclick="document.getElementById('ideaPhotoInput').click()">
-        <input type="file" id="ideaPhotoInput" accept="image/*,video/*" multiple onchange="handleIdeaPhotoUpload(event)">
+        <input type="file" id="ideaPhotoInput" accept="image/*" multiple onchange="handleIdeaPhotoUpload(event)">
         <div class="photo-upload-icon">🖼</div>
         <div class="photo-upload-text">Клікни щоб додати референс</div>
       </div>
+    </div>
+    <div class="field-group">
+      <label>Відео (посилання: Instagram, Drive, Vimeo...)</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="ideaVideoLinkInput" placeholder="https://..." style="flex:1;background:var(--surface);border:1px solid var(--line2);border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;padding:10px 13px;outline:none;">
+        <button type="button" class="btn-save" onclick="addIdeaVideoLink()">Додати</button>
+      </div>
+      <div id="ideaVideoLinksList" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModals()">Скасувати</button>
@@ -1128,8 +1144,10 @@ let detailComplexity = 'simple';
 let detailResp = 'tier';
 let detailTags = [];
 let detailPhotos = [];
+let detailVideoLinks = [];
 let shootTags = [];
 let ideaPhotos = [];
+let ideaVideoLinks = [];
 let currentModalTabId = 'info';
 let isReadonly = false;
 
@@ -1398,6 +1416,7 @@ window._openDetail = function(collection, id) {
   detailResp=item.responsible||'tier';
   detailTags=[...(item.tags||[])];
   detailPhotos=[...(item.photos||[])];
+  detailVideoLinks=[...(item.videoLinks||[])];
 
   const icon=collection==='photos'?'📸':collection==='designs'?'🎨':(COMPLEXITY_ICON[item.complexity]||'🎬');
   const cls=collection==='photos'?'photo':collection==='designs'?'design':(item.complexity||'simple');
@@ -1423,6 +1442,7 @@ window._openDetail = function(collection, id) {
   renderDetailTags();
   // photos
   renderDetailPhotos();
+  renderDetailVideoLinks();
   // stages
   renderStages(item, collection);
 
@@ -1578,6 +1598,26 @@ function renderDetailPhotos(){
 
 window.removeDetailPhoto = function(i){detailPhotos.splice(i,1);renderDetailPhotos();}
 
+window.addDetailVideoLink = function(){
+  const input=document.getElementById('dVideoLinkInput');
+  const url=input.value.trim();
+  if(!url) return;
+  detailVideoLinks.push(url);
+  input.value='';
+  renderDetailVideoLinks();
+};
+
+function renderDetailVideoLinks(){
+  document.getElementById('dVideoLinksList').innerHTML=detailVideoLinks.map((url,i)=>
+    `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--surface);border-radius:6px;">
+      <a href="${url}" target="_blank" rel="noopener" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--accent);font-size:12px;">🎬 ${url}</a>
+      <button type="button" onclick="removeDetailVideoLink(${i})" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;">×</button>
+    </div>`
+  ).join('');
+}
+
+window.removeDetailVideoLink = function(i){detailVideoLinks.splice(i,1);renderDetailVideoLinks();};
+
 window.saveDetail = function() {
   if(!detailId) return;
   const name=document.getElementById('dName').value.trim();
@@ -1601,7 +1641,7 @@ window.saveDetail = function() {
   });
 
   const upd={name, responsible:detailResp, deadline:document.getElementById('dDeadline').value||null,
-    notes:document.getElementById('dNotes').value, tags:detailTags, photos:detailPhotos, stages};
+    notes:document.getElementById('dNotes').value, tags:detailTags, photos:detailPhotos, videoLinks:detailVideoLinks, stages};
   if(detailCollection==='reels') upd.complexity=detailComplexity;
   update(ref(db,`${detailCollection}/${detailId}`),upd);
   closeModals();
@@ -1962,10 +2002,12 @@ window.renderIdeaTagsUI = function() {
 // === ФУНКЦІЇ ВІДКРИТТЯ ТА ЗБЕРЕЖЕННЯ ===
 window.openIdeaAdd = function() {
   ideaPhotos = [];
+  ideaVideoLinks = [];
   document.getElementById('ideaTitleInput').value = '';
   document.getElementById('ideaDescInput').value = '';
   document.getElementById('ideaStatusInput').value = 'review';
   document.getElementById('ideaPhotoGrid').innerHTML = '';
+  document.getElementById('ideaVideoLinksList').innerHTML = '';
   
   window._ideaCurrentFormats = [];
   window._ideaCurrentRubrics = [];
@@ -1999,6 +2041,26 @@ function renderIdeaPhotos(){
 
 window.removeIdeaPhoto = function(i){ideaPhotos.splice(i,1);renderIdeaPhotos();};
 
+window.addIdeaVideoLink = function(){
+  const input=document.getElementById('ideaVideoLinkInput');
+  const url=input.value.trim();
+  if(!url) return;
+  ideaVideoLinks.push(url);
+  input.value='';
+  renderIdeaVideoLinks();
+};
+
+function renderIdeaVideoLinks(){
+  document.getElementById('ideaVideoLinksList').innerHTML=ideaVideoLinks.map((url,i)=>
+    `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--surface);border-radius:6px;">
+      <a href="${url}" target="_blank" rel="noopener" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--accent);font-size:12px;">🎬 ${url}</a>
+      <button type="button" onclick="removeIdeaVideoLink(${i})" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;">×</button>
+    </div>`
+  ).join('');
+}
+
+window.removeIdeaVideoLink = function(i){ideaVideoLinks.splice(i,1);renderIdeaVideoLinks();};
+
 window.saveIdeaAdd = function(){
   const title=document.getElementById('ideaTitleInput').value.trim();
   if(!title)return;
@@ -2007,6 +2069,7 @@ window.saveIdeaAdd = function(){
     desc:document.getElementById('ideaDescInput').value.trim(),
     status:document.getElementById('ideaStatusInput').value,
     photos:ideaPhotos,
+    videoLinks:ideaVideoLinks,
     formats: window._ideaCurrentFormats || [],
     rubrics: window._ideaCurrentRubrics || [],
     createdAt:Date.now()
@@ -2017,12 +2080,14 @@ window.saveIdeaAdd = function(){
 window.openIdeaDetail = function(id){
   const idea=ideas[id];if(!idea)return;
   ideaPhotos=[...(idea.photos||[])];
+  ideaVideoLinks=[...(idea.videoLinks||[])];
   document.getElementById('ideaTitleInput').value=idea.title||'';
   document.getElementById('ideaDescInput').value=idea.desc||'';
   const legacySt = {dev:'inwork', new:'review'};
   const curSt = idea.status || 'review';
   document.getElementById('ideaStatusInput').value = legacySt[curSt] || curSt;
   renderIdeaPhotos();
+  renderIdeaVideoLinks();
 
   window._ideaCurrentFormats = [...(idea.formats||[])];
   window._ideaCurrentRubrics = [...(idea.rubrics||[])];
@@ -2038,6 +2103,7 @@ window.openIdeaDetail = function(id){
       desc:document.getElementById('ideaDescInput').value.trim(),
       status:document.getElementById('ideaStatusInput').value,
       photos:ideaPhotos,
+      videoLinks:ideaVideoLinks,
       formats: window._ideaCurrentFormats || [],
       rubrics: window._ideaCurrentRubrics || []
     });
