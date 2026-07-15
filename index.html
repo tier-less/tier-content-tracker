@@ -807,7 +807,7 @@ background:var(--card);border:1px solid var(--line);border-radius:18px;padding:2
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModals()">Скасувати</button>
-      <button class="btn-save" onclick="saveIdeaAdd()">Зберегти</button>
+      <button class="btn-save" id="ideaSaveBtn" onclick="saveIdeaAdd()">Зберегти</button>
     </div>
   </div>
 </div>
@@ -2013,7 +2013,7 @@ window.openIdeaAdd = function() {
   window._ideaCurrentRubrics = [];
   window.renderIdeaTagsUI(); // Малюємо теги!
   
-  document.querySelector('#ideaAddModal .btn-save').onclick = window.saveIdeaAdd;
+  document.getElementById('ideaSaveBtn').onclick = window.saveIdeaAdd;
   document.getElementById('ideaAddModal').classList.add('open');
   setTimeout(() => document.getElementById('ideaTitleInput').focus(), 100);
 };
@@ -2095,7 +2095,7 @@ window.openIdeaDetail = function(id){
 
   window._editIdeaId=id;
   document.getElementById('ideaAddModal').classList.add('open');
-  document.querySelector('#ideaAddModal .btn-save').onclick=function(){
+  document.getElementById('ideaSaveBtn').onclick=function(){
     const title=document.getElementById('ideaTitleInput').value.trim();
     if(!title)return;
     update(ref(db,'ideas/'+id),{
