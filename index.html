@@ -86,12 +86,33 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .cal-month{font-family:'Unbounded',sans-serif;font-size:15px;font-weight:700;}
 .cal-arrow{background:var(--card2);border:1px solid var(--line2);color:var(--text);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:border-color .15s;}
 .cal-arrow:hover{border-color:var(--accent);color:var(--accent);}
-.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:5px;}
-.cal-wd{text-align:center;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:5px 0;}
-.cal-wd.weekend{color:rgba(155,127,232,0.5);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-.cal-cell{min-height:70px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px;position:relative;cursor:pointer;transition:border-color .15s;}
-.cal-cell:hover{border-color:var(--line2);}
+.cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cal-cell {
+    min-height: 70px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box; /* Обов’язково додай це, щоб border і padding рахувалися ВСРЕДИНІ комірки */
+    min-width: 0;          /* Не дає карткам подій розпирати комірку по ширині */
+}.cal-cell:hover{border-color:var(--line2);}
 .cal-cell.today{border-color:var(--accent);}
 .cal-cell.weekend-cell{background:rgba(155,127,232,0.04);}
 .cal-cell.other-month{opacity:.2;pointer-events:none;}
